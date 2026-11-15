@@ -5,6 +5,9 @@ Develop and verify phases in the user's order. Do not substitute planned mechani
 Current request: finish the complete original game before presenting it as ready. Continue through every remaining phase, verifying each before the next. Lovable Cloud is connected for durable progress and real cooperative sessions.
 
 Current completion pass:
+- [ ] Increase asteroid speed and oxygen consumption; verify Q and phone/tablet tank button.
+- [ ] Improve textured terrain and lighting; show growing crops through the base.
+- [ ] Run a fresh normal-input campaign from Jugar, with no simulation/teleport/actions injected.
 - [x] Correct astronaut facing so forward movement shows their back, never a backwards walk toward the destination.
 - [x] Implement Earth launchpad, countdown and ascent before spaceflight.
 - [x] Apply optional selected suits: verified cyan/green profiles through Cloud and reload; broadcast and remote suit rendering wired.

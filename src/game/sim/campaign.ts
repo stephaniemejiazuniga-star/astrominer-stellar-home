@@ -1,4 +1,4 @@
-export const RULES = { initialTanks: 4, missionTanks: 2, stormSeconds: 30, vortexSeconds: 50, factEvery: 60, factVisible: 10, quizElements: 4, maxPlayers: 5, launchSeconds: 12, countdownSeconds: 3, flightSeconds: 35, speed: 5.2, gravity: 3.71, jumpSpeed: 4.2 };
+export const RULES = { initialTanks: 4, missionTanks: 2, stormSeconds: 30, vortexSeconds: 50, factEvery: 60, factVisible: 10, quizElements: 4, maxPlayers: 5, launchSeconds: 12, countdownSeconds: 3, flightSeconds: 35, speed: 5.2, gravity: 3.71, jumpSpeed: 4.2, asteroidSpeed: 22, vortexParticleSpeed: 14, oxygenPerSecond: { easy: .3, normal: .6, hard: .9 } };
 export type Planet = 'mars' | 'jupiter';
 export type Resource = 'stone' | 'iron' | 'silicon' | 'magnesium' | 'water';
 export type Action = { type: 'pack'; item: string } | { type: 'launch' } | { type: 'collect'; id: string } | { type: 'build'; building: 'base' | 'lab' | 'center' } | { type: 'plant' | 'water' | 'harvest' | 'refill' | 'eat' | 'deposit' | 'withdraw' | 'retry' } | { type: 'scan'; symbol: string } | { type: 'answer'; answer: string } | { type: 'travel'; planet: Planet };
@@ -130,9 +130,10 @@ export function stepGame(s:GameState,seconds:number,x:number,z:number,difficulty
  s.factTime+=dt;
  if(s.factTime>=RULES.factEvery){s.factTime-=RULES.factEvery;s.factIndex=(s.factIndex+1)%facts[s.planet].length;}
  if(s.phase==='flight'){s.flightTime+=dt;if(s.flightTime>=RULES.flightSeconds){s.phase='surface';s.stage=2;s.x=0;s.z=9;achieve(s,'Primer viaje espacial');achieve(s,'Llegada a Marte');}return;}
- const rate=difficulty==='easy'?0.05:difficulty==='hard'?0.2:0.1;
+ const rate=RULES.oxygenPerSecond[difficulty==='easy'?'easy':difficulty==='hard'?'hard':'normal'];
  if(!inBase(x,z,s))s.oxygen=Math.max(0,s.oxygen-dt*rate);
- s.food=Math.max(0,s.food-dt*rate*.6);
+ const foodRate=difficulty==='easy'?.03:difficulty==='hard'?.12:.06;
+ s.food=Math.max(0,s.food-dt*foodRate);
  if(s.oxygen<=0||s.food<=0)s.health=Math.max(0,s.health-dt*2);
  if(s.crop==='watered'){s.cropTime+=dt;if(s.cropTime>=20){s.crop='ready';notify(s,'Tu cultivo está listo para cosechar.');}}
  if(s.stormWarning>0){s.stormWarning=Math.max(0,s.stormWarning-dt);if(s.stormWarning===0)s.storm=RULES.stormSeconds;}
@@ -144,3 +145,5 @@ export function facingYaw(x:number,z:number){return Math.atan2(x,z)+Math.PI;}
 export function inputVector(keys:Set<string>,touchX=0,touchY=0,padX=0,padY=0){return {forward:(keys.has('KeyW')||keys.has('ArrowUp')?1:0)-(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-touchY-padY,strafe:(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0)+touchX+padX};}
 export function deadzone(x:number,y:number){const m=Math.hypot(x,y);if(m<=.15)return {x:0,y:0};const scale=Math.min(1,(m-.15)/.85)/m;return {x:x*scale,y:y*scale};}
 export function launchAltitude(time:number){const ascent=Math.max(0,time-RULES.countdownSeconds);return ascent*ascent*1.8;}
+export function cropGrowth(crop:GameState['crop'],time:number){return crop==='ready'?1:crop==='watered'?.25+.75*Math.min(1,Math.max(0,time)/20):crop==='planted'?.18:0;}
+export function asteroidZ(initial:number,time:number,vortex=false){return ((initial+time*(vortex?RULES.vortexParticleSpeed:RULES.asteroidSpeed)+360)%360)-180;}

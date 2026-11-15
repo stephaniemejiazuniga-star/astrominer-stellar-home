@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {newGame,applyAction,stepGame,question,marsNodes,cloudNodes,moveVector,launchAltitude,facingYaw,inputVector,deadzone,RULES,type GameState} from './campaign';
+import {newGame,applyAction,stepGame,question,marsNodes,cloudNodes,moveVector,launchAltitude,facingYaw,inputVector,deadzone,cropGrowth,asteroidZ,RULES,type GameState} from './campaign';
 function sim(s:GameState,seconds:number,x=s.x,z=s.z){for(let i=0;i<Math.round(seconds*20);i++)stepGame(s,.05,x,z);}
 function prepared(){let s=newGame();for(const item of ['pickaxe','seeds','bag'])s=applyAction(s,{type:'pack',item});return s;}
 function surface(){const s=applyAction(prepared(),{type:'launch'});sim(s,RULES.launchSeconds+35.1);return s;}
@@ -31,6 +31,11 @@ describe('Campaign rules',()=>{
 });
 
 describe('Launch and controls',()=>{
+ it('moves flight asteroids faster than the previous 12 units per second',()=>{expect(asteroidZ(-30,1)-asteroidZ(-30,0)).toBe(22);expect(RULES.asteroidSpeed).toBeGreaterThan(12);});
+ it('uses oxygen faster outside the base without accelerating hunger',()=>{const s=surface();s.oxygen=100;s.food=100;sim(s,60,15,15);expect(s.oxygen).toBeCloseTo(64);expect(s.food).toBeCloseTo(96.4);});
+ it('consumes exactly one tank and restores oxygen without wasting tanks at full oxygen',()=>{const s=surface();s.oxygen=25;const tanks=s.inventory['tank']??0;const refilled=applyAction(s,{type:'refill'});expect(refilled.oxygen).toBe(100);expect(refilled.inventory['tank']).toBe(tanks-1);expect(applyAction(refilled,{type:'refill'}).inventory['tank']).toBe(tanks-1);});
+ it('keeps oxygen unchanged while sheltered in the base',()=>{const s=surface();s.built.base=true;s.oxygen=45;sim(s,60,0,0);expect(s.oxygen).toBe(45);});
+ it('grows watered crops and removes harvested plants',()=>{expect(cropGrowth('planted',0)).toBe(.18);expect(cropGrowth('watered',10)).toBe(.625);expect(cropGrowth('ready',20)).toBe(1);expect(cropGrowth('harvested',20)).toBe(0);});
  it('counts down on Earth before ascent and then starts spaceflight',()=>{const s=applyAction(prepared(),{type:'launch'});expect(s.phase).toBe('launch');expect(launchAltitude(3)).toBe(0);expect(launchAltitude(4)).toBeCloseTo(1.8);sim(s,11.9);expect(s.phase).toBe('launch');sim(s,.2);expect(s.phase).toBe('flight');expect(s.flightTime).toBeLessThan(.2);});
  it('points the model native negative Z front in the movement direction',()=>{const m=moveVector(1,0,0),yaw=facingYaw(m.x,m.z);expect(-Math.sin(yaw)).toBeCloseTo(m.x);expect(-Math.cos(yaw)).toBeCloseTo(m.z);});
  it('maps keyboard touch and standard gamepad to identical camera-relative forward',()=>{expect(inputVector(new Set(['KeyW']))).toEqual({forward:1,strafe:0});expect(inputVector(new Set(),0,-1)).toEqual({forward:1,strafe:0});expect(inputVector(new Set(),0,0,0,-1)).toEqual({forward:1,strafe:0});expect(deadzone(.1,.05)).toEqual({x:0,y:0});expect(deadzone(0,-1)).toEqual({x:0,y:-1});});
