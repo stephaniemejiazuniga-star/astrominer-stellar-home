@@ -14,7 +14,7 @@ import type { Settings } from '../data/settings';
 export type Controls={keys:Set<string>;yaw:number;pitch:number;touchX:number;touchY:number; jump:boolean; paused:boolean};
 export type Remote={id:string;x:number;z:number;y:number;yaw:number;name:string};
 export function Model({url,height=2,...props}:{url:string;height?:number;position?:[number,number,number];rotation?:[number,number,number]}){
- const {scene}=useGLTF(url); const model=useMemo(()=>{const c=clone(scene);const box=new THREE.Box3().setFromObject(c);const size=box.getSize(new THREE.Vector3());const center=box.getCenter(new THREE.Vector3());const scale=height/(size.y||1);c.scale.setScalar(scale);c.position.set(-center.x*scale,-box.min.y*scale,-center.z*scale);c.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}});return c;},[scene,height]);
+ const {scene}=useGLTF(url); const model=useMemo(()=>{const c=clone(scene);const box=new THREE.Box3().setFromObject(c);const size=box.getSize(new THREE.Vector3());const center=box.getCenter(new THREE.Vector3());const scale=height/(size.y||1);c.scale.setScalar(scale);c.position.set(-center.x*scale,-box.min.y*scale,-center.z*scale);c.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;if(o.name==='gate')o.visible=false;}});return c;},[scene,height]);
  return <group {...props}><primitive object={model}/></group>;
 }
 function RocketModel({height=7}:{height?:number}){return <group><Model url={rocket.url} height={height*.8}/><Model url={rocketTop.url} height={height*.24} position={[0,height*.76,0]}/></group>;}
@@ -26,7 +26,7 @@ function Surface({state}:{state:MutableRefObject<GameState>}){
  {rocks.map((r,i)=><mesh key={i} position={[r.x,r.scale*.35,r.z]} scale={[r.scale*2,r.scale,r.scale*1.5]} rotation={[i*.4,i,0]}><icosahedronGeometry args={[1,0]}/><meshStandardMaterial color={i%2?p.ground:p.stone} flatShading roughness={1}/></mesh>)}
  {marsNodes.filter(n=>!s.collected.includes(n.id)).map(n=><group key={n.id} position={[n.x,.45,n.z]}><mesh rotation={[.2,n.x,.5]}><dodecahedronGeometry args={[n.kind==='stone'?.75:.6,0]}/><meshStandardMaterial color={p[n.kind]} roughness={n.kind==='water'?.2:.8} metalness={n.kind==='iron'?.3:0} emissive={p[n.kind]} emissiveIntensity={.12}/></mesh>{n.kind!=='stone'&&<mesh position={[0,-.3,0]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[.8,.88,16]}/><meshBasicMaterial color={p[n.kind]} transparent opacity={.5}/></mesh>}</group>)}
  {Object.entries(sites).filter(([k])=>k!=='rocket').map(([key,v])=><group key={key} position={[v.x,0,v.z]}>{s.built[key as keyof typeof s.built]?<><Suspense fallback={null}><Model url={habitat.url} height={key==='base'?5:3.8}/>{key!=='base'&&<Model url={computer.url} height={1.7} position={[0,.1,3.4]}/>}</Suspense><mesh position={[0,.02,0]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[9,9]}/><meshStandardMaterial color={p.metal}/></mesh></>:<mesh rotation={[-Math.PI/2,0,0]} position={[0,.05,0]}><ringGeometry args={[3.8,4,40]}/><meshBasicMaterial color={p.glass} transparent opacity={.55}/></mesh>}</group>)}
- <Suspense fallback={null}>{s.phase!=='packing'&&<group position={[0,0,15]}><RocketModel/></group>}</Suspense>
+ <Suspense fallback={null}>{s.phase!=='packing'&&<group position={[sites.rocket.x,0,sites.rocket.z]}><RocketModel/></group>}</Suspense>
  {s.crop!=='empty'&&s.crop!=='harvested'&&Array.from({length:6},(_,i)=><mesh key={i} position={[-2+(i%3),s.crop==='ready'?1.3:.5,-1+Math.floor(i/3)]}><coneGeometry args={[.35,s.crop==='ready'?1.6:.5,5]}/><meshStandardMaterial color={p.plant}/></mesh>)}
  </>;
 }
@@ -59,7 +59,7 @@ function Simulation({state,controls,settings,onTick,remote}:{state:MutableRefObj
   if(s.phase==='flight'||s.phase==='vortex'){
    flightObstacles.forEach((o,i)=>{const mesh=obstacleRefs.current[i];if(!mesh)return;const speed=s.phase==='flight'?12:8;const zz=((o.z+s.time*speed+360)%360)-180;mesh.position.set(o.x,s.phase==='flight'?o.y:1.2+Math.sin(s.time+i)*2,zz);const dx=mesh.position.x-(s.phase==='flight'?s.x:group.position.x);const dz=mesh.position.z-(s.phase==='flight'?0:group.position.z);const dy=mesh.position.y-(s.phase==='flight'?y.current:1);if(Math.hypot(dx,dy,dz)<1.8&&cooldown.current===0){if(s.phase==='flight')s.hull=Math.max(0,s.hull-20);else s.health=Math.max(0,s.health-12);cooldown.current=1;}});
   }
-  const target=s.phase==='flight'?new THREE.Vector3(s.x,y.current+2.5,12):new THREE.Vector3(group.position.x-Math.sin(c.yaw)*9,6+group.position.y+c.pitch*3,group.position.z+Math.cos(c.yaw)*9);
+  const target=s.phase==='flight'?new THREE.Vector3(s.x,y.current+2.5,12):new THREE.Vector3(group.position.x-Math.sin(c.yaw)*13,8+group.position.y+c.pitch*3,group.position.z+Math.cos(c.yaw)*13);
   camera.position.lerp(target,1-Math.exp(-5*dt));camera.lookAt(s.phase==='flight'?new THREE.Vector3(s.x,y.current,-4):new THREE.Vector3(group.position.x,group.position.y+1.2,group.position.z));
   const fog=scene.fog;if(fog instanceof THREE.Fog){fog.near=s.storm>0?3:35;fog.far=s.storm>0?15:130;fog.color.set(s.planet==='jupiter'?p.jupiterSky:p.sky);}
   for(const [id,data]of remote.current){const g=remotes.current.get(id);if(g){g.position.lerp(new THREE.Vector3(data.x,data.y,data.z),1-Math.exp(-12*dt));g.rotation.y=data.yaw;}}

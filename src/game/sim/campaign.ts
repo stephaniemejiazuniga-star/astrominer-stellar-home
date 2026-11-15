@@ -39,7 +39,7 @@ export const objectives = [
  'Construye NASA DATA CENTER con 5 piedras y 3 hierros. Completa la expedición marciana.',
 ];
 export const buildCosts = {base:{stone:6,iron:4},lab:{stone:4,iron:3,silicon:2},center:{stone:5,iron:3}};
-export const sites = {base:{x:0,z:0},lab:{x:12,z:0},center:{x:-12,z:0},rocket:{x:0,z:15}};
+export const sites = {base:{x:0,z:0},lab:{x:12,z:0},center:{x:-12,z:0},rocket:{x:-20,z:15}};
 export const marsNodes = Array.from({length:70},(_,i) => {
  const kinds: Resource[]=['stone','iron','silicon','magnesium','water'];
  const angle=i*2.39996; const radius=13+Math.sqrt(i)*3.4;

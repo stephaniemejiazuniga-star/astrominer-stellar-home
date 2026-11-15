@@ -13,7 +13,7 @@ describe('Campaign rules',()=>{
  it('penalizes players outside their shelter',()=>{const s=surface();s.storm=30;sim(s,1,15,15);expect(s.health).toBeCloseTo(99);});
  it('locks questions until four elements have been analyzed',()=>{const s=surface();s.built.lab=true;s.analyzed=['Fe','Si','Mg'];expect(applyAction(s,{type:'answer',answer:'Fe'},12,0).quiz).toBe(0);});
  it('correct answers award two additional oxygen tanks',()=>{const s=surface();s.built.lab=true;s.analyzed=['Fe','Si','Mg','O'];const tanks=s.inventory['tank']??0;expect(applyAction(s,{type:'answer',answer:question(s).answer},12,0).inventory['tank']).toBe(tanks+2);});
- it('runs the Jupiter vortex for 50 seconds',()=>{const s=surface();s.unlockedJupiter=true;const j=applyAction(s,{type:'travel',planet:'jupiter'},0,15);sim(j,49.9);expect(j.phase).toBe('vortex');sim(j,.2);expect(j.phase).toBe('surface');expect(RULES.vortexSeconds).toBe(50);});
+ it('runs the Jupiter vortex for 50 seconds',()=>{const s=surface();s.unlockedJupiter=true;const j=applyAction(s,{type:'travel',planet:'jupiter'},-20,15);sim(j,49.9);expect(j.phase).toBe('vortex');sim(j,.2);expect(j.phase).toBe('surface');expect(RULES.vortexSeconds).toBe(50);});
  it('shows a new fact every minute for ten seconds',()=>{const s=surface();s.factTime=0;s.factIndex=-1;sim(s,59.9);expect(s.factIndex).toBe(-1);sim(s,.2);expect(s.factIndex).toBe(0);expect(s.factTime).toBeLessThan(10);sim(s,10);expect(s.factTime).toBeGreaterThan(10);sim(s,50);expect(s.factIndex).toBe(1);expect(RULES.factVisible).toBe(10);});
  it('caps cooperative sessions at five players',()=>{expect(RULES.maxPlayers).toBe(5);});
  it('moves in camera-relative forward, backward and strafe directions',()=>{expect(moveVector(1,0,0)).toEqual({x:0,z:-1});expect(moveVector(-1,0,0)).toEqual({x:0,z:1});expect(moveVector(0,-1,0).x).toBe(-1);expect(moveVector(0,-1,0).z).toBeCloseTo(0);expect(moveVector(0,1,0)).toEqual({x:1,z:0});expect(moveVector(1,0,Math.PI/2).x).toBeCloseTo(1);});
@@ -25,7 +25,7 @@ describe('Campaign rules',()=>{
  for(const symbol of ['Fe','Si','Mg','O'])s=applyAction(s,{type:'scan',symbol},12,0);expect(s.analyzed).toHaveLength(4);
  for(let i=0;i<3;i++)s=applyAction(s,{type:'answer',answer:question(s).answer},12,0);expect(s.quizPassed).toBe(true);
  s=applyAction(s,{type:'build',building:'center'},-12,0);expect(s.unlockedJupiter).toBe(true);expect(s.built.center).toBe(true);
- s=applyAction(s,{type:'travel',planet:'jupiter'},0,15);sim(s,50.1);for(const n of cloudNodes)s=applyAction(s,{type:'collect',id:n.id},n.x,n.z);expect(s.jupiterDone).toBe(true);
+ s=applyAction(s,{type:'travel',planet:'jupiter'},-20,15);sim(s,50.1);for(const n of cloudNodes)s=applyAction(s,{type:'collect',id:n.id},n.x,n.z);expect(s.jupiterDone).toBe(true);
  s=applyAction(s,{type:'travel',planet:'mars'});expect(s.planet).toBe('mars');for(const n of cloudNodes)expect(s.inventory[n.kind]).toBeGreaterThanOrEqual(1);
  });
 });
