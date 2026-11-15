@@ -2,6 +2,8 @@
 
 Develop and verify phases in the user's order. Do not substitute planned mechanics with mock functionality.
 
+Current request: finish the complete original game before presenting it as ready. Continue through every remaining phase, verifying each before the next. Lovable Cloud is connected for durable progress and real cooperative sessions.
+
 - [x] 1. Start screen, main menu, and configuration — verified menu actions, language switching, stored preferences, and desktop/mobile layout; gameplay/audio preferences await their respective phases.
 - [ ] 2. 3D character movement and camera.
 - [ ] 3. Real multiplayer creation/joining, shared world and progress, five-player limit.
@@ -15,4 +17,4 @@ Develop and verify phases in the user's order. Do not substitute planned mechani
 - [ ] 11. Full gameplay adaptation for desktop, tablet, phone.
 - [ ] 12. Game-wide testing, optimization, corrections.
 
-Future phases follow current-phase verification and review; they are not implemented or simulated by menu actions.
+Pending prerequisite for account implementation: confirm whether players should have stored profile information. No phase is complete until its real behavior has been implemented and verified; do not claim work continues after a turn ends.
