@@ -5,6 +5,7 @@ Develop and verify phases in the user's order. Do not substitute planned mechani
 Current request: finish the complete original game before presenting it as ready. Continue through every remaining phase, verifying each before the next. Lovable Cloud is connected for durable progress and real cooperative sessions.
 
 Current completion pass:
+- [ ] Correct astronaut facing so forward movement shows their back, never a backwards walk toward the destination.
 - [ ] Implement Earth launchpad, countdown and ascent before spaceflight.
 - [ ] Apply optional selected suits to local and cooperative astronauts.
 - [ ] Translate every player-facing panel, science entry, objective and notification.
