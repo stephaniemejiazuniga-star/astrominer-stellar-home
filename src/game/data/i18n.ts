@@ -9,7 +9,7 @@ export function translate(text:string,language:'es'|'en'):string {
  if(lower)return lower[1].toLowerCase();
  if(text.startsWith('Logro: ')){const [name,reward]=text.slice(7).split(' · ');return `Achievement: ${translate(name??'',language)} · ${reward?.replace('tanques de oxígeno','oxygen tanks')??''}`;}
  if(text.startsWith('Muestra recolectada: '))return `Sample collected: ${translate(text.slice(21),language)}`;
- if(text.startsWith('Recolectar '))return `Collect ${translate(text.slice(11),language)}`;
+ if(text.startsWith('Recolectar '))return `Collect ${translate(text.slice(10),language)}`;
  if(text.startsWith('¿Cuál es el símbolo del '))return `What is the symbol for ${translate(text.slice(24,-1),language)}?`;
  if(text.startsWith('¿Cuál es el número atómico de '))return `What is the atomic number of ${translate(text.slice(30,-1),language)}?`;
  if(text.startsWith('¿Qué elemento tiene el símbolo '))return `Which element has the symbol ${text.slice(31,-1)}?`;
