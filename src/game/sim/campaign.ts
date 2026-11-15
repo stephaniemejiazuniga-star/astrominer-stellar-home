@@ -1,13 +1,13 @@
-export const RULES = { initialTanks: 4, missionTanks: 2, stormSeconds: 30, vortexSeconds: 50, factEvery: 60, factVisible: 10, quizElements: 4, maxPlayers: 5, flightSeconds: 35, speed: 5.2, gravity: 3.71, jumpSpeed: 4.2 };
+export const RULES = { initialTanks: 4, missionTanks: 2, stormSeconds: 30, vortexSeconds: 50, factEvery: 60, factVisible: 10, quizElements: 4, maxPlayers: 5, launchSeconds: 12, countdownSeconds: 3, flightSeconds: 35, speed: 5.2, gravity: 3.71, jumpSpeed: 4.2 };
 export type Planet = 'mars' | 'jupiter';
 export type Resource = 'stone' | 'iron' | 'silicon' | 'magnesium' | 'water';
 export type Action = { type: 'pack'; item: string } | { type: 'launch' } | { type: 'collect'; id: string } | { type: 'build'; building: 'base' | 'lab' | 'center' } | { type: 'plant' | 'water' | 'harvest' | 'refill' | 'eat' | 'deposit' | 'withdraw' | 'retry' } | { type: 'scan'; symbol: string } | { type: 'answer'; answer: string } | { type: 'travel'; planet: Planet };
 export type GameState = {
- version: 1; phase: 'packing' | 'flight' | 'surface' | 'vortex'; planet: Planet; stage: number;
+ version: 1; phase: 'packing' | 'launch' | 'flight' | 'surface' | 'vortex'; planet: Planet; stage: number;
  inventory: Record<string, number>; storage: Record<string,number>; packed: string[]; collected: string[];
  built: {base:boolean;lab:boolean;center:boolean}; crop: 'empty' | 'planted' | 'watered' | 'ready' | 'harvested'; cropTime: number;
  analyzed: string[]; quiz: number; quizPassed: boolean; unlockedJupiter: boolean; jupiterDone: boolean;
- oxygen: number; health: number; food: number; time: number; flightTime: number; hull: number;
+ oxygen: number; health: number; food: number; time: number; launchTime: number; flightTime: number; hull: number;
  storm: number; stormDone: boolean; stormWarning: number; vortex: number; achievements: string[];
  factIndex: number; factTime: number; message: string; messageTime: number; x:number; z:number;
 };
@@ -62,11 +62,11 @@ export const facts: Record<Planet,string[]>={mars:[
  'Júpiter gira muy rápido: un día dura aproximadamente 10 horas.',
  'Las nubes de muestras de ASTROMINER son una representación educativa, no nubes reales de elementos puros.',
 ]};
-export function newGame(): GameState { return {version:1,phase:'packing',planet:'mars',stage:0,inventory:{tank:RULES.initialTanks,food:2},storage:{},packed:[],collected:[],built:{base:false,lab:false,center:false},crop:'empty',cropTime:0,analyzed:[],quiz:0,quizPassed:false,unlockedJupiter:false,jupiterDone:false,oxygen:100,health:100,food:100,time:0,flightTime:0,hull:100,storm:0,stormDone:false,stormWarning:0,vortex:0,achievements:[],factIndex:-1,factTime:0,message:'',messageTime:0,x:0,z:9}; }
+export function newGame(): GameState { return {version:1,phase:'packing',planet:'mars',stage:0,inventory:{tank:RULES.initialTanks,food:2},storage:{},packed:[],collected:[],built:{base:false,lab:false,center:false},crop:'empty',cropTime:0,analyzed:[],quiz:0,quizPassed:false,unlockedJupiter:false,jupiterDone:false,oxygen:100,health:100,food:100,time:0,launchTime:0,flightTime:0,hull:100,storm:0,stormDone:false,stormWarning:0,vortex:0,achievements:[],factIndex:-1,factTime:0,message:'',messageTime:0,x:0,z:9}; }
 export function restoreGame(value:unknown): GameState | null {
  if (!value || typeof value!=='object') return null;
  const s=value as Partial<GameState>;
- if(s.version!==1 || !s.inventory || !s.built || !Array.isArray(s.achievements) || !Array.isArray(s.collected) || !Array.isArray(s.analyzed) || !Array.isArray(s.packed) || !['packing','flight','surface','vortex'].includes(s.phase??'') || !['mars','jupiter'].includes(s.planet??'')) return null;
+ if(s.version!==1 || !s.inventory || !s.built || !Array.isArray(s.achievements) || !Array.isArray(s.collected) || !Array.isArray(s.analyzed) || !Array.isArray(s.packed) || !['packing','launch','flight','surface','vortex'].includes(s.phase??'') || !['mars','jupiter'].includes(s.planet??'')) return null;
  return {...newGame(),...s} as GameState;
 }
 export function notify(s:GameState,message:string) {s.message=message;s.messageTime=6;}
@@ -84,7 +84,7 @@ export function applyAction(previous:GameState,action:Action,x=previous.x,z=prev
  if(action.type==='retry'){if(s.phase==='flight'&&s.hull<=0){s.hull=100;s.flightTime=0;notify(s,'Nave reparada. Inténtalo otra vez.');}else if(s.health<=0){s.health=100;s.oxygen=100;s.food=80;s.x=0;s.z=0;notify(s,'Rescatado. Tus descubrimientos se conservan.');}return s;}
  if(s.health<=0 || s.hull<=0) return s;
  if(action.type==='pack' && s.phase==='packing') {if(!s.packed.includes(action.item)&&['pickaxe','seeds','bag','scanner','food'].includes(action.item)){s.packed.push(action.item);s.inventory[action.item]=(s.inventory[action.item]??0)+(action.item==='seeds'?3:1);}return s;}
- if(action.type==='launch'&&s.phase==='packing') {if(['pickaxe','seeds','bag'].every(k=>s.packed.includes(k))){s.phase='flight';s.stage=1;achieve(s,'Equipamiento preparado');}else notify(s,'Empaca pico, semillas y bolsa científica antes de despegar.');return s;}
+ if(action.type==='launch'&&s.phase==='packing') {if(['pickaxe','seeds','bag'].every(k=>s.packed.includes(k))){s.phase='launch';s.launchTime=0;s.stage=1;achieve(s,'Equipamiento preparado');}else notify(s,'Empaca pico, semillas y bolsa científica antes de despegar.');return s;}
  if(action.type==='collect' && s.phase==='surface'){
  const node=(s.planet==='mars'?marsNodes:cloudNodes).find(n=>n.id===action.id);
  if(!node || s.collected.includes(node.id)||distance(x,z,node)>4) {notify(s,'Acércate a la muestra para recolectarla.');return s;}
@@ -126,6 +126,7 @@ export function stepGame(s:GameState,seconds:number,x:number,z:number,difficulty
  const dt=Math.min(seconds,0.05);if(s.health<=0||s.hull<=0)return;
  s.time+=dt;s.x=x;s.z=z;s.messageTime=Math.max(0,s.messageTime-dt);
  if(s.phase==='packing')return;
+ if(s.phase==='launch'){s.launchTime+=dt;if(s.launchTime>=RULES.launchSeconds){s.phase='flight';s.x=0;s.z=0;s.flightTime=0;}return;}
  s.factTime+=dt;
  if(s.factTime>=RULES.factEvery){s.factTime-=RULES.factEvery;s.factIndex=(s.factIndex+1)%facts[s.planet].length;}
  if(s.phase==='flight'){s.flightTime+=dt;if(s.flightTime>=RULES.flightSeconds){s.phase='surface';s.stage=2;s.x=0;s.z=9;achieve(s,'Primer viaje espacial');achieve(s,'Llegada a Marte');}return;}
@@ -138,3 +139,8 @@ export function stepGame(s:GameState,seconds:number,x:number,z:number,difficulty
  else if(s.storm>0){s.storm=Math.max(0,s.storm-dt);if(!inBase(x,z,s))s.health=Math.max(0,s.health-dt*(difficulty==='easy'?0.5:1));if(s.storm===0){s.stormDone=true;s.stage=5;achieve(s,'Superviviente de la tormenta');}}
  if(s.phase==='vortex'){s.vortex=Math.max(0,s.vortex-dt);if(s.vortex===0){s.phase='surface';achieve(s,'Explorador de Júpiter');}}
 }
+
+export function facingYaw(x:number,z:number){return Math.atan2(x,z)+Math.PI;}
+export function inputVector(keys:Set<string>,touchX=0,touchY=0,padX=0,padY=0){return {forward:(keys.has('KeyW')||keys.has('ArrowUp')?1:0)-(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-touchY-padY,strafe:(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0)+touchX+padX};}
+export function deadzone(x:number,y:number){const m=Math.hypot(x,y);if(m<=.15)return {x:0,y:0};const scale=Math.min(1,(m-.15)/.85)/m;return {x:x*scale,y:y*scale};}
+export function launchAltitude(time:number){const ascent=Math.max(0,time-RULES.countdownSeconds);return ascent*ascent*1.8;}
