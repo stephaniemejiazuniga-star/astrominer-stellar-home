@@ -205,3 +205,64 @@
 @media (min-width: 1600px) { .menu-body { min-height: 740px; } .game-title { font-size: 80px; } }
 @media (max-width: 640px) { .topbar { min-height: 75px; } .brand-mark { font-size: 14px; gap: 8px; } .topbar-status { display: none; } .menu-body { min-height: 600px; padding: 40px 0; } .game-title { font-size: 46px; } .game-subtitle { font-size: 15px; max-width: 260px; } .mission-backdrop { object-position: 72% center; } .mission-shade { background: linear-gradient(90deg, oklch(0.12 0.005 250 / 90%), oklch(0.12 0.005 250 / 50%)), linear-gradient(0deg, var(--background), transparent); } .planet-marker { display: none; } .bottom-band { flex-direction: column; align-items: flex-start; gap: 20px; } .game-menu { width: 295px; } .system-dialog { padding: 25px 20px; } .setting-row { gap: 12px; } }
 @media (prefers-reduced-motion: no-preference) { .menu-content { animation: arrive 700ms ease-out; } .menu-command { transition: background 180ms, transform 180ms; } .menu-command:hover { transform: translateX(4px); } @keyframes arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } } }
+
+/* Full-bleed expedition interface */
+.expedition-shell { position:relative; height:100svh; min-height:540px; overflow:hidden; background:var(--background); color:var(--foreground); }
+.world-layer { position:absolute; inset:0; touch-action:none; }
+.game-top { position:absolute; top:0; left:0; right:0; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(var(--overlay),transparent); pointer-events:none; }
+.game-top > * {pointer-events:auto;}
+.game-top h1 {margin:0;}
+.mission-hud {position:absolute; left:24px; top:92px; max-width:310px; padding:16px 18px; border-left:2px solid var(--primary); background:var(--overlay); backdrop-filter:blur(8px); pointer-events:none;}
+.mission-hud h2 {font-family:var(--font-display);font-size:20px;margin:8px 0;}
+.mission-hud p {font-size:13px;line-height:1.55;color:var(--muted-foreground);margin:4px 0;}
+.mission-hud progress {width:100%;accent-color:var(--primary);height:5px;}
+.vitals-hud {position:absolute;bottom:28px;left:24px;display:flex;flex-direction:column;gap:11px;background:var(--overlay);padding:15px 18px;min-width:250px;border:1px solid var(--border);border-radius:4px;}
+.vitals-hud > div {display:flex;align-items:center;gap:10px;font-size:11px;}
+.vitals-hud span {min-width:52px;color:var(--muted-foreground);}
+.vitals-hud progress {width:90px;height:5px;accent-color:var(--science);}
+.vitals-hud b {font-family:var(--font-display);font-weight:500;width:34px;}
+.game-toolbar {position:absolute;right:24px;bottom:28px;display:flex;gap:8px;}
+.game-toolbar button {height:44px;width:44px;border:1px solid var(--border);}
+.interaction-prompt {position:absolute;bottom:35px;left:50%;transform:translateX(-50%);height:42px;max-width:calc(100% - 40px);white-space:normal;}
+.interaction-prompt kbd {font-family:var(--font-display);border:1px solid var(--border);padding:1px 5px;font-size:11px;}
+.fact-hud {position:absolute;right:24px;top:92px;width:280px;background:var(--overlay);padding:18px;border:1px solid var(--border);border-radius:4px;}
+.fact-hud p {font-size:13px;line-height:1.5;margin-top:8px;}
+.achievement-toast {position:absolute;top:22px;left:50%;transform:translateX(-50%);max-width:440px;background:var(--overlay);padding:14px 20px;border:1px solid var(--border);display:flex;gap:12px;align-items:center;font-size:13px;border-radius:4px;}
+.packing-panel {position:absolute;right:5%;top:50%;transform:translateY(-50%);width:400px;max-width:90%;background:var(--overlay);backdrop-filter:blur(12px);padding:28px;border:1px solid var(--border);border-radius:6px;}
+.packing-panel h2 {font-family:var(--font-display);font-size:28px;line-height:1.2;margin:12px 0;}
+.packing-panel > p {font-size:13px;color:var(--muted-foreground);margin-bottom:15px;}
+.packing-grid {display:flex;flex-direction:column;gap:8px;margin:20px 0;}
+.packing-item {height:58px;justify-content:flex-start;gap:14px;text-align:left;white-space:normal;}
+.packing-item small {display:block;font-size:10px;font-weight:400;color:var(--muted-foreground);margin-top:3px;}
+.packing-item b {font-weight:500;font-size:13px;}
+.game-loading {position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:var(--background);}
+.game-loading h1 {font-family:var(--font-display);font-size:26px;}
+.game-loading p {max-width:350px;text-align:center;color:var(--muted-foreground);padding:0 20px;}
+.game-input {display:block;width:100%;padding:10px 12px;border:1px solid var(--input);background:var(--secondary);border-radius:4px;color:var(--foreground);font-size:14px;}
+.google-auth {background:oklch(0.185 0.002 285);border-color:oklch(0.65 0.005 130);color:oklch(0.9 0.005 130);font-size:14px;font-weight:500;}
+.inventory-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.inventory-grid > div {border:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--secondary);border-radius:4px;}
+.inventory-grid span {font-size:12px;}
+.inventory-grid b {font-family:var(--font-display);font-size:20px;}
+.element-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+.element-card {border:1px solid var(--border);padding:14px;background:var(--secondary);border-radius:4px;}
+.element-card small {font-family:var(--font-display);color:var(--science);}
+.element-card h3 {font-family:var(--font-display);font-size:32px;margin:5px 0;}
+.element-card h4 {font-size:13px;margin:0 0 8px;}
+.element-card p {font-size:11px;color:var(--muted-foreground);line-height:1.5;}
+.science-photo {width:100%;height:250px;object-fit:contain;background:var(--secondary);border-radius:4px;}
+.quiz-panel {border-top:1px solid var(--border);padding-top:20px;}
+.quiz-panel h3 {font-family:var(--font-display);font-size:18px;margin:12px 0 20px;}
+.touch-controls {position:absolute;bottom:95px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center;pointer-events:none;}
+.touch-controls button {pointer-events:auto;touch-action:none;width:64px;height:64px;border:1px solid var(--border);user-select:none;}
+.touch-pad {width:180px;display:grid;grid-template-columns:repeat(3,56px);gap:4px;}
+.touch-pad button {width:56px;height:56px;}
+.touch-pad button:first-child {grid-column:2;}
+.touch-pad button:nth-child(2) {grid-column:1;}
+.game-error {position:absolute;bottom:165px;left:50%;transform:translateX(-50%);background:var(--background);border:1px solid var(--primary);padding:12px 16px;max-width:90%;font-size:13px;display:flex;gap:12px;align-items:center;border-radius:4px;}
+.save-status {position:absolute;right:24px;top:70px;font-size:11px;color:var(--signal);}
+.rescue-panel,.completion-banner {position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--overlay);padding:30px;max-width:90%;text-align:center;border:1px solid var(--border);border-radius:6px;}
+.rescue-panel h2,.completion-banner h2 {font-family:var(--font-display);font-size:28px;margin-bottom:10px;}
+.rescue-panel p,.completion-banner p {font-size:14px;margin-bottom:20px;color:var(--muted-foreground);}
+@media(max-width:700px){.game-top{padding:12px;}.mission-hud{left:12px;top:70px;max-width:260px;padding:12px;}.mission-hud h2{font-size:16px;}.mission-hud p{font-size:11px;}.vitals-hud{left:12px;bottom:12px;min-width:200px;padding:10px;gap:7px;}.vitals-hud progress{width:62px;}.game-toolbar{right:12px;bottom:12px;gap:4px;}.game-toolbar button{width:34px;height:34px;}.interaction-prompt{bottom:228px;font-size:12px;}.fact-hud{top:200px;right:12px;width:200px;padding:12px;}.fact-hud p{font-size:11px;}.achievement-toast{top:65px;max-width:90%;width:310px;font-size:11px;}.packing-panel{padding:20px;width:350px;top:52%;}.packing-panel h2{font-size:24px;}.packing-item{height:52px;}.element-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.science-photo{height:180px;}.touch-controls{bottom:95px;left:12px;right:12px;}.touch-controls > .flex{gap:8px;}.touch-controls > .flex button{width:56px;height:56px;}}
+@media(max-height:650px) and (min-width:700px){.packing-panel{padding:20px;}.packing-grid{margin:12px 0;gap:5px;}.packing-item{height:44px;}.packing-panel h2{font-size:24px;}}

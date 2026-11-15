@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ExpeditionRouteImport } from './routes/expedition'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExpeditionRoute = ExpeditionRouteImport.update({
+  id: '/expedition',
+  path: '/expedition',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -25,27 +31,31 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/expedition': typeof ExpeditionRoute
   '/reset-password': typeof ResetPasswordRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/expedition': typeof ExpeditionRoute
   '/reset-password': typeof ResetPasswordRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/expedition': typeof ExpeditionRoute
   '/reset-password': typeof ResetPasswordRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/reset-password'
+  fullPaths: '/' | '/expedition' | '/reset-password'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/reset-password'
-  id: '__root__' | '/' | '/reset-password'
+  to: '/' | '/expedition' | '/reset-password'
+  id: '__root__' | '/' | '/expedition' | '/reset-password'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ExpeditionRoute: typeof ExpeditionRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/expedition': {
+      id: '/expedition'
+      path: '/expedition'
+      fullPath: '/expedition'
+      preLoaderRoute: typeof ExpeditionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ExpeditionRoute: ExpeditionRoute,
   ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
