@@ -25,7 +25,7 @@ Current completion pass:
 - [x] 6. Construction, farming, water, oxygen, and 30-second sandstorm.
 - [x] 7. Laboratory, chemical elements, educational challenges.
 - [x] 8. Full NASA DATA CENTER: verified photos, maps, science cards.
-- [x] 9. Jupiter unlock, 50-second vortex, atmospheric sample collection.
+- [x] 9. Jupiter unlock, 50-second vortex, 11-sample collection with E, and final campaign ending after analyzing them on Mars (browser + unit verified).
 - [x] 10. Achievements, rewards, timed planet facts.
 - [ ] 11. Full device validation — responsive views and touch controls implemented; keyboard and simulated touch verified; physical touch/gamepad and real-device frame rate remain unverified.
 - [ ] 12. Final release validation — 21 unit tests, connected campaign/Cloud save and two-client multiplayer checks pass; full unassisted UI playthrough and real-speaker audio review remain pending. Latest authenticated checks verify profile changes and save reload; no fresh cooperative avatar playthrough was completed.
