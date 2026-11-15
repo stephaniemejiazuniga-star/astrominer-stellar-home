@@ -1,0 +1,4 @@
+import {createFileRoute} from '@tanstack/react-router';
+import {Expedition} from '@/game/ui/Expedition';
+export const Route=createFileRoute('/expedition')({ssr:false,validateSearch:(s:Record<string,unknown>)=>({room:typeof s.room==='string'?s.room:undefined}),component:Page,head:()=>({meta:[{title:'ASTROMINER · Expedición Ares'},{name:'description',content:'Explora Marte, construye tu base y descubre los elementos químicos en la expedición educativa de ASTROMINER.'},{property:'og:title',content:'ASTROMINER · Expedición Ares'},{property:'og:description',content:'Supervivencia espacial, construcción y exploración científica en 3D.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]})});
+function Page(){const {room}=Route.useSearch();return <Expedition roomId={room}/>;}
