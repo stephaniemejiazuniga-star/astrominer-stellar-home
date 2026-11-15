@@ -266,6 +266,8 @@
 .save-status {position:absolute;right:24px;top:70px;font-size:11px;color:var(--signal);}
 .rescue-panel,.completion-banner {position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--overlay);padding:30px;max-width:90%;text-align:center;border:1px solid var(--border);border-radius:6px;}
 .rescue-panel h2,.completion-banner h2 {font-family:var(--font-display);font-size:28px;margin-bottom:10px;}
+.victory-banner {z-index:40;}
+.victory-time {font-family:var(--font-display);font-size:20px;color:var(--science);margin-bottom:20px;}
 .rescue-panel p,.completion-banner p {font-size:14px;margin-bottom:20px;color:var(--muted-foreground);}
 @media(max-width:700px){.game-top{padding:12px;}.mission-hud{left:12px;top:70px;max-width:260px;padding:12px;}.mission-hud h2{font-size:16px;}.mission-hud p{font-size:11px;}.vitals-hud{left:12px;bottom:12px;min-width:200px;padding:10px;gap:7px;}.vitals-hud progress{width:62px;}.game-toolbar{right:12px;bottom:12px;gap:4px;}.game-toolbar button{width:34px;height:34px;}.interaction-prompt{bottom:228px;font-size:12px;}.fact-hud{top:200px;right:12px;width:200px;padding:12px;}.fact-hud p{font-size:11px;}.achievement-toast{top:65px;max-width:90%;width:310px;font-size:11px;}.packing-panel{padding:20px;width:350px;top:52%;}.packing-panel h2{font-size:24px;}.packing-item{height:52px;}.element-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.science-photo{height:180px;}.touch-controls{bottom:95px;left:12px;right:12px;}.touch-controls > .flex{gap:8px;}.touch-controls > .flex button{width:56px;height:56px;}}
 @media(max-height:650px) and (min-width:700px){.packing-panel{padding:20px;}.packing-grid{margin:12px 0;gap:5px;}.packing-item{height:44px;}.packing-panel h2{font-size:24px;}}

@@ -305,5 +305,9 @@ export const english:Record<string,string> = {
   "iron": "iron",
   "silicon": "silicon",
   "magnesium": "magnesium",
-  "water": "water"
+  "water": "water",
+  "¡Felicidades! Completaste ASTROMINER": "Congratulations! You completed ASTROMINER",
+  "Analizaste todas las muestras de Júpiter y terminaste la expedición.": "You analyzed every Jupiter sample and finished the expedition.",
+  "Tiempo total:": "Total time:",
+  "Seguir explorando": "Keep exploring"
 };
