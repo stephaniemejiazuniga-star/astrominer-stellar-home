@@ -30,6 +30,11 @@
  */
 
 @theme inline {
+  --font-sans: 'Barlow', sans-serif;
+  --font-display: 'Chakra Petch', sans-serif;
+  --color-signal: var(--signal);
+  --color-overlay: var(--overlay);
+  --color-science: var(--science);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -73,26 +78,29 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --radius: 0.375rem;
+  --signal: oklch(0.86 0.17 128);
+  --science: oklch(0.8 0.11 190);
+  --overlay: oklch(0.1 0.005 250 / 78%);
+  --background: oklch(0.16 0.007 250);
+  --foreground: oklch(0.96 0.007 80);
+  --card: oklch(0.2 0.007 250);
+  --card-foreground: oklch(0.96 0.007 80);
+  --popover: oklch(0.2 0.007 250);
+  --popover-foreground: oklch(0.96 0.007 80);
+  --primary: oklch(0.75 0.17 45);
+  --primary-foreground: oklch(0.16 0.007 250);
+  --secondary: oklch(0.23 0.008 250);
+  --secondary-foreground: oklch(0.96 0.007 80);
+  --muted: oklch(0.23 0.008 250);
+  --muted-foreground: oklch(0.72 0.012 250);
+  --accent: oklch(0.29 0.008 250);
+  --accent-foreground: oklch(0.96 0.007 80);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: oklch(0.96 0.007 80 / 16%);
+  --input: oklch(0.35 0.008 250);
+  --ring: oklch(0.75 0.17 45);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -109,25 +117,25 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
+  --background: oklch(0.16 0.007 250);
+  --foreground: oklch(0.96 0.007 80);
+  --card: oklch(0.2 0.007 250);
+  --card-foreground: oklch(0.96 0.007 80);
+  --popover: oklch(0.2 0.007 250);
+  --popover-foreground: oklch(0.96 0.007 80);
+  --primary: oklch(0.75 0.17 45);
+  --primary-foreground: oklch(0.16 0.007 250);
+  --secondary: oklch(0.23 0.008 250);
+  --secondary-foreground: oklch(0.96 0.007 80);
+  --muted: oklch(0.23 0.008 250);
+  --muted-foreground: oklch(0.72 0.012 250);
+  --accent: oklch(0.29 0.008 250);
+  --accent-foreground: oklch(0.96 0.007 80);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
+  --border: oklch(0.96 0.007 80 / 16%);
+  --input: oklch(0.35 0.008 250);
+  --ring: oklch(0.75 0.17 45);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -149,7 +157,51 @@
   }
 
   body {
+    font-family: var(--font-sans);
+    margin: 0;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
 }
+
+.mission-shell { min-height: 100svh; position: relative; isolation: isolate; display: flex; flex-direction: column; overflow: hidden; }
+.mission-backdrop { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; object-position: 65% center; }
+.mission-shade { position: absolute; inset: 0; z-index: -2; background: linear-gradient(90deg, oklch(0.12 0.005 250 / 88%), oklch(0.12 0.005 250 / 40%) 42%, transparent 75%), linear-gradient(0deg, var(--background), transparent 35%, oklch(0.12 0.005 250 / 20%)); }
+.topbar { display: flex; align-items: center; justify-content: space-between; margin: 0 5%; min-height: 90px; border-bottom: 1px solid var(--border); gap: 20px; }
+.brand-mark { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 600; font-size: 18px; }
+.brand-icon { color: var(--primary); transform: rotate(-30deg); }
+.eyebrow { font-family: var(--font-display); font-size: 11px; letter-spacing: 0; text-transform: uppercase; }
+.menu-body { width: 90%; margin: auto; padding: 55px 0; flex: 1; display: flex; align-items: center; min-height: 650px; }
+.menu-content { width: 490px; max-width: 100%; }
+.game-title { font-family: var(--font-display); font-size: 68px; line-height: 1.08; font-weight: 700; margin: 19px 0 15px; letter-spacing: 0; }
+.game-subtitle { color: var(--muted-foreground); font-size: 17px; line-height: 1.6; max-width: 360px; margin: 0 0 31px; }
+.game-menu { display: flex; flex-direction: column; width: 320px; max-width: 100%; gap: 4px; }
+.menu-command { justify-content: flex-start; height: 49px; padding: 0 20px; border-radius: 3px; font-size: 15px; gap: 15px; }
+.menu-command svg { width: 18px; height: 18px; }
+.launch-command { height: 58px; margin-bottom: 10px; font-family: var(--font-display); font-weight: 600; font-size: 17px; }
+.menu-rule { margin: 12px 0; border-top: 1px solid var(--border); }
+.planet-marker { position: absolute; right: 7%; top: 49%; font-family: var(--font-display); border-left: 1px solid var(--primary); padding-left: 16px; text-shadow: 0 2px 10px var(--background); }
+.telemetry { display: flex; gap: 35px; padding-top: 26px; margin-top: 23px; border-top: 1px solid var(--border); width: 360px; max-width: 100%; }
+.telemetry dt { font-size: 10px; color: var(--muted-foreground); margin-bottom: 7px; }
+.telemetry dd { margin: 0; font-family: var(--font-display); font-size: 15px; }
+.bottom-band { margin: 0 5%; padding: 25px 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 25px; align-items: center; }
+.fact-preview { display: flex; gap: 17px; align-items: center; max-width: 610px; }
+.fact-label { display: block; color: var(--signal); font-family: var(--font-display); font-size: 10px; margin-bottom: 5px; }
+.fact-preview p { margin: 0; font-size: 13px; color: var(--muted-foreground); line-height: 1.5; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--signal); display: inline-block; }
+.system-dialog { max-height: 88svh; overflow-y: auto; background: var(--background); width: calc(100% - 32px); max-width: 640px; padding: 30px; border-top: 2px solid var(--primary); }
+.system-dialog h2 { font-family: var(--font-display); font-size: 25px; letter-spacing: 0; }
+.settings-group { padding: 15px 0; border-top: 1px solid var(--border); }
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 14px 0; font-size: 14px; }
+.setting-select { background: var(--secondary); border: 1px solid var(--border); color: var(--foreground); border-radius: 4px; padding: 8px 10px; width: 160px; font-size: 13px; }
+.setting-range { accent-color: var(--primary); width: 130px; cursor: pointer; }
+.science-entry { padding: 18px 0; border-top: 1px solid var(--border); }
+.science-entry h3 { font-family: var(--font-display); font-size: 18px; margin-bottom: 12px; }
+.science-entry p { color: var(--muted-foreground); font-size: 14px; line-height: 1.6; }
+.science-entry strong { color: var(--science); font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 3px; }
+.control-key { border: 1px solid var(--border); padding: 5px 9px; background: var(--secondary); border-radius: 3px; font-family: var(--font-display); min-width: 35px; text-align: center; }
+.planet-option { display: flex; gap: 20px; align-items: center; padding: 22px 0; border-bottom: 1px solid var(--border); }
+.planet-thumb { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; }
+@media (min-width: 1600px) { .menu-body { min-height: 740px; } .game-title { font-size: 80px; } }
+@media (max-width: 640px) { .topbar { min-height: 75px; } .brand-mark { font-size: 14px; gap: 8px; } .topbar-status { display: none; } .menu-body { min-height: 600px; padding: 40px 0; } .game-title { font-size: 46px; } .game-subtitle { font-size: 15px; max-width: 260px; } .mission-backdrop { object-position: 72% center; } .mission-shade { background: linear-gradient(90deg, oklch(0.12 0.005 250 / 90%), oklch(0.12 0.005 250 / 50%)), linear-gradient(0deg, var(--background), transparent); } .planet-marker { display: none; } .bottom-band { flex-direction: column; align-items: flex-start; gap: 20px; } .game-menu { width: 295px; } .system-dialog { padding: 25px 20px; } .setting-row { gap: 12px; } }
+@media (prefers-reduced-motion: no-preference) { .menu-content { animation: arrive 700ms ease-out; } .menu-command { transition: background 180ms, transform 180ms; } .menu-command:hover { transform: translateX(4px); } @keyframes arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } } }

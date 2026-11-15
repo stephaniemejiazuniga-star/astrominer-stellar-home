@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Application architecture
+- Keep opening menu and configuration in client-side UI modules; never represent unimplemented gameplay or multiplayer as working actions.
+- Store device preferences locally, independently of future Cloud-backed game progress, so configuration does not require an account.
+- Keep scientific reference records separate from UI, with source URLs and explicit simulation distinctions, for reuse by later game systems.
