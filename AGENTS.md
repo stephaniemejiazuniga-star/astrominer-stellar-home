@@ -39,3 +39,8 @@ use the editor.
 - Use one eight-Hz change-only Broadcast/Presence channel per room and durable row-change notifications, with teardown and hidden-tab suppression, so networking stays within the casual co-op message budget.
 - Dev-only window.__game exposes state, action, teleport, sim(seconds), roster, remotes and revision for reproductions; the canvas sets data-scene-ready for the bundled verification harness. Never use these hooks to declare normal UI playthrough fully verified.
 - Store all scene material roles centrally in scene/palette.ts and all DOM styling in global semantic tokens, so scene and UI changes remain coordinated.
+
+- Earth launch is a deterministic campaign phase before flight; legacy version-one saves merge launch defaults for compatibility.
+- All input sources share pure input/facing helpers; the astronaut GLB faces negative Z, so heading includes the model-axis correction.
+- Clone suit materials per astronaut and broadcast optional profile appearance, so shared model caches never leak another player's colors.
+- One gesture-unlocked GameAudio mixer owns recorded sounds and exposes numeric meters; dev __game.performance reports render budgets, not real-device FPS certification.
