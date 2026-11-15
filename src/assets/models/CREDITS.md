@@ -6,3 +6,4 @@ Rocket top A — Kenney Space Kit, CC0-1.0. https://flockbay.com/assets/rocket-t
 
 Launch gantry — Structure Tall, Kenney Factory Kit, CC0-1.0. https://flockbay.com/assets/structure-tall/ (license verified 2026-11-15).
 Launch tower — Structure Detailed, Kenney Space Kit, CC0-1.0. https://flockbay.com/assets/structure-detailed/ (license verified 2026-11-15).
+Rocket fuel A — Kenney Space Kit, CC0-1.0. https://flockbay.com/assets/rocket-fuel-a/ (license verified 2026-11-15).
