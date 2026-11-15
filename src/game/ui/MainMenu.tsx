@@ -54,7 +54,7 @@ export function MainMenu() {
       <h1 className="game-title">ASTROMINER<span className="text-primary">.</span></h1>
       <p className="game-subtitle">{t('Explora. Sobrevive. Descubre.', 'Explore. Survive. Discover.')}<br/>{t('Tu próxima aventura está fuera de este mundo.', 'Your next adventure is out of this world.')}</p>
       <nav className="game-menu" aria-label={t('Menú principal', 'Main menu')}>
-        <Button variant="mission" className="menu-command launch-command" onClick={() => navigate({to:'/expedition'})}><Rocket/>{t('JUGAR', 'PLAY')}<ArrowRight className="ml-auto"/></Button>
+        <Button variant="mission" className="menu-command launch-command" onClick={() => navigate({to:'/expedition',search:{room:undefined}})}><Rocket/>{t('JUGAR', 'PLAY')}<ArrowRight className="ml-auto"/></Button>
         <Button variant="menu" className="menu-command" onClick={() => setPanel('multiplayer')}><Users/>{t('Multijugador', 'Multiplayer')}<span className="ml-auto eyebrow text-muted-foreground">01—05</span></Button>
         <Button variant="menu" className="menu-command" onClick={() => setPanel('settings')}><Settings2/>{t('Configuración', 'Settings')}</Button>
         <Button variant="menu" className="menu-command" onClick={() => setPanel('help')}><BookOpen/>{t('Cómo jugar', 'How to play')}</Button>

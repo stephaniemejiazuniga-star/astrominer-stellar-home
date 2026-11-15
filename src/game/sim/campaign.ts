@@ -43,7 +43,7 @@ export const sites = {base:{x:0,z:0},lab:{x:12,z:0},center:{x:-12,z:0},rocket:{x
 export const marsNodes = Array.from({length:70},(_,i) => {
  const kinds: Resource[]=['stone','iron','silicon','magnesium','water'];
  const angle=i*2.39996; const radius=13+Math.sqrt(i)*3.4;
- return {id:`mars-${i}`,kind:kinds[i%5],x:Math.cos(angle)*radius,z:Math.sin(angle)*radius};
+ return {id:`mars-${i}`,kind:kinds[i%5] ?? 'stone',x:Math.cos(angle)*radius,z:Math.sin(angle)*radius};
 });
 export const cloudNodes = jupiterSymbols.map((kind,i)=>({id:`jupiter-${i}`,kind,x:Math.cos(i*2.4)*(10+i),z:Math.sin(i*2.4)*(10+i)}));
 export const facts: Record<Planet,string[]>={mars:[
@@ -70,13 +70,13 @@ export function restoreGame(value:unknown): GameState | null {
  return {...newGame(),...s} as GameState;
 }
 export function notify(s:GameState,message:string) {s.message=message;s.messageTime=6;}
-export function achieve(s:GameState,id:string) {if(!s.achievements.includes(id)){s.achievements.push(id);s.inventory.tank=(s.inventory.tank??0)+RULES.missionTanks;notify(s,`Logro: ${id} · +2 tanques de oxígeno`);}}
+export function achieve(s:GameState,id:string) {if(!s.achievements.includes(id)){s.achievements.push(id);s.inventory['tank']=(s.inventory['tank']??0)+RULES.missionTanks;notify(s,`Logro: ${id} · +2 tanques de oxígeno`);}}
 export function inBase(x:number,z:number,s:GameState){return s.planet==='mars' && s.built.base && Math.abs(x)<4.4 && Math.abs(z)<4.4;}
 export function distance(x:number,z:number,point:{x:number;z:number}){return Math.hypot(x-point.x,z-point.z);}
 export function nearestNode(s:GameState,x:number,z:number){return (s.planet==='mars'?marsNodes:cloudNodes).filter(n=>!s.collected.includes(n.id)).sort((a,b)=>distance(x,z,a)-distance(x,z,b))[0];}
 export function canBuild(s:GameState,building:keyof typeof buildCosts){return Object.entries(buildCosts[building]).every(([k,n])=>(s.inventory[k]??0)>=n);}
 export function question(s:GameState) {
- const pool=elements.filter(e=>s.analyzed.includes(e.symbol)); const e=pool[s.quiz%Math.max(pool.length,1)] ?? elements[0];
+ const pool=elements.filter(e=>s.analyzed.includes(e.symbol)); const e=pool[s.quiz%Math.max(pool.length,1)] ?? {symbol:'Fe',name:'Hierro',number:26,resource:'iron',use:'',fact:''};
  return s.quiz%3===0 ? {text:`¿Cuál es el símbolo del ${e.name.toLowerCase()}?`,answer:e.symbol,options:[e.symbol,...elements.filter(v=>v.symbol!==e.symbol).slice(0,3).map(v=>v.symbol)]} : s.quiz%3===1 ? {text:`¿Cuál es el número atómico de ${e.name}?`,answer:String(e.number),options:[String(e.number),String(e.number+1),String(e.number+3),String(e.number+5)]} : {text:`¿Qué elemento tiene el símbolo ${e.symbol}?`,answer:e.name,options:[e.name,...elements.filter(v=>v.symbol!==e.symbol).slice(0,3).map(v=>v.name)]};
 }
 export function applyAction(previous:GameState,action:Action,x=previous.x,z=previous.z):GameState {
@@ -101,7 +101,7 @@ export function applyAction(previous:GameState,action:Action,x=previous.x,z=prev
  if(distance(x,z,sites[b])>7){notify(s,'Acércate al emplazamiento de construcción.');return s;}
  if((b==='lab'&&!s.stormDone)||(b==='center'&&!s.quizPassed)){notify(s,'Completa la misión anterior primero.');return s;}
  if(!canBuild(s,b)){notify(s,'Necesitas más materiales para construir.');return s;}
- for(const [k,n] of Object.entries(buildCosts[b])) s.inventory[k]-=n;
+ for(const [k,n] of Object.entries(buildCosts[b])) s.inventory[k]=(s.inventory[k]??0)-n;
  s.built[b]=true;
  if(b==='base'){s.stage=3;achieve(s,'Primera base construida');}
  if(b==='lab')achieve(s,'Laboratorio construido');
@@ -109,15 +109,15 @@ export function applyAction(previous:GameState,action:Action,x=previous.x,z=prev
  return s;
  }
  if(['plant','water','harvest','deposit','withdraw'].includes(action.type)&&!inBase(x,z,s)){notify(s,'Debes estar dentro de la base.');return s;}
- if(action.type==='plant'){if((s.crop==='empty'||s.crop==='harvested')&&(s.inventory.seeds??0)>0){s.inventory.seeds--;s.crop='planted';s.cropTime=0;notify(s,'Cultivo plantado. Necesita agua.');}return s;}
- if(action.type==='water'){if(s.crop==='planted'&&(s.inventory.water??0)>0){s.inventory.water--;s.crop='watered';s.cropTime=0;notify(s,'Cultivo regado. Crecerá en 20 segundos.');}else notify(s,'Necesitas agua y un cultivo plantado.');return s;}
- if(action.type==='harvest'){if(s.crop==='ready'){s.inventory.food=(s.inventory.food??0)+3;s.inventory.seeds=(s.inventory.seeds??0)+2;s.crop='harvested';achieve(s,'Primer cultivo');if(!s.stormDone){s.stage=4;s.stormWarning=12;notify(s,'ALERTA: tormenta en 12 segundos. Refúgiate en la base.');}}return s;}
- if(action.type==='refill'){if((s.inventory.tank??0)>0&&s.oxygen<100){s.inventory.tank--;s.oxygen=100;notify(s,'Tanque conectado. Oxígeno al 100 %.');}return s;}
- if(action.type==='eat'){if((s.inventory.food??0)>0&&s.food<100){s.inventory.food--;s.food=Math.min(100,s.food+45);s.health=Math.min(100,s.health+10);notify(s,'Alimento consumido.');}return s;}
+ if(action.type==='plant'){if((s.crop==='empty'||s.crop==='harvested')&&(s.inventory['seeds']??0)>0){s.inventory['seeds']=(s.inventory['seeds']??0)-1;s.crop='planted';s.cropTime=0;notify(s,'Cultivo plantado. Necesita agua.');}return s;}
+ if(action.type==='water'){if(s.crop==='planted'&&(s.inventory['water']??0)>0){s.inventory['water']=(s.inventory['water']??0)-1;s.crop='watered';s.cropTime=0;notify(s,'Cultivo regado. Crecerá en 20 segundos.');}else notify(s,'Necesitas agua y un cultivo plantado.');return s;}
+ if(action.type==='harvest'){if(s.crop==='ready'){s.inventory['food']=(s.inventory['food']??0)+3;s.inventory['seeds']=(s.inventory['seeds']??0)+2;s.crop='harvested';achieve(s,'Primer cultivo');if(!s.stormDone){s.stage=4;s.stormWarning=12;notify(s,'ALERTA: tormenta en 12 segundos. Refúgiate en la base.');}}return s;}
+ if(action.type==='refill'){if((s.inventory['tank']??0)>0&&s.oxygen<100){s.inventory['tank']=(s.inventory['tank']??0)-1;s.oxygen=100;notify(s,'Tanque conectado. Oxígeno al 100 %.');}return s;}
+ if(action.type==='eat'){if((s.inventory['food']??0)>0&&s.food<100){s.inventory['food']=(s.inventory['food']??0)-1;s.food=Math.min(100,s.food+45);s.health=Math.min(100,s.health+10);notify(s,'Alimento consumido.');}return s;}
  if(action.type==='deposit'){for(const [k,n] of Object.entries(s.inventory)){if(['tank','food','seeds','pickaxe','bag','scanner'].includes(k))continue;s.storage[k]=(s.storage[k]??0)+n;s.inventory[k]=0;}notify(s,'Materiales almacenados en tu base.');return s;}
  if(action.type==='withdraw'){for(const [k,n]of Object.entries(s.storage)){s.inventory[k]=(s.inventory[k]??0)+n;s.storage[k]=0;}notify(s,'Materiales retirados del almacén.');return s;}
- if(action.type==='scan'){if(!s.built.lab||s.planet!=='mars'||distance(x,z,sites.lab)>7){notify(s,'Acércate al laboratorio de Marte.');return s;}const e=elements.find(e=>e.symbol===action.symbol);if(!e||(s.inventory[e.resource]??0)<1){notify(s,'Recolecta esta muestra primero.');return s;}if(!s.analyzed.includes(e.symbol)){s.analyzed.push(e.symbol);notify(s,`${e.name} · ${e.symbol} · Número atómico ${e.number}`);}return s;}
- if(action.type==='answer'){if(s.analyzed.length<4||!s.built.lab||distance(x,z,sites.lab)>7){notify(s,'Analiza al menos cuatro elementos en el laboratorio.');return s;}if(action.answer===question(s).answer){s.quiz++;s.inventory.tank=(s.inventory.tank??0)+2;notify(s,'¡Correcto! +2 tanques de oxígeno');if(s.quiz>=3&&!s.quizPassed){s.quizPassed=true;s.stage=6;achieve(s,'Científico principiante');}}else{ s.oxygen=Math.max(0,s.oxygen-5);notify(s,'No es correcto. Consulta las fichas e inténtalo de nuevo.');}return s;}
+ if(action.type==='scan'){if(!s.built.lab||s.planet!=='mars'||distance(x,z,sites.lab)>7){notify(s,'Acércate al laboratorio de Marte.');return s;}const e=elements.find(e=>e.symbol===action.symbol);if(!e||(s.inventory[e.resource]??s.inventory[e.symbol]??0)<1){notify(s,'Recolecta esta muestra primero.');return s;}if(!s.analyzed.includes(e.symbol)){s.analyzed.push(e.symbol);notify(s,`${e.name} · ${e.symbol} · Número atómico ${e.number}`);}return s;}
+ if(action.type==='answer'){if(s.analyzed.length<4||!s.built.lab||distance(x,z,sites.lab)>7){notify(s,'Analiza al menos cuatro elementos en el laboratorio.');return s;}if(action.answer===question(s).answer){s.quiz++;s.inventory['tank']=(s.inventory['tank']??0)+2;notify(s,'¡Correcto! +2 tanques de oxígeno');if(s.quiz>=3&&!s.quizPassed){s.quizPassed=true;s.stage=6;achieve(s,'Científico principiante');}}else{ s.oxygen=Math.max(0,s.oxygen-5);notify(s,'No es correcto. Consulta las fichas e inténtalo de nuevo.');}return s;}
  if(action.type==='travel'){if(distance(x,z,sites.rocket)>7&&s.planet==='mars'){notify(s,'Acércate al cohete.');return s;}if(action.planet==='jupiter'&&!s.unlockedJupiter){notify(s,'Completa las siete etapas de Marte.');return s;}s.planet=action.planet;s.x=0;s.z=7;s.factTime=0;s.factIndex=-1;if(s.planet==='jupiter'&&!s.achievements.includes('Explorador de Júpiter')){s.phase='vortex';s.vortex=50;notify(s,'Vórtice atmosférico simulado. ¡Evita las partículas durante 50 segundos!');}else{s.phase='surface';notify(s,s.planet==='mars'?'De regreso en Marte. Analiza tus muestras en el laboratorio.':'Recoge las 11 muestras atmosféricas con tu bolsa científica.');}return s;}
  return s;
 }
