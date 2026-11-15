@@ -77,6 +77,8 @@ export const english:Record<string,string> = {
   "Superviviente de la tormenta": "Storm survivor",
   "Explorador de Júpiter": "Jupiter explorer",
   "Recolector de elementos químicos": "Chemical element collector",
+  "Expedición ASTROMINER completada": "ASTROMINER expedition complete",
+  "¡Campaña completada! Analizaste todas las muestras de Júpiter.": "Campaign complete! You analyzed every Jupiter sample.",
   "Científico principiante": "Beginner scientist",
   "Nave reparada. Inténtalo otra vez.": "Spacecraft repaired. Try again.",
   "Rescatado. Tus descubrimientos se conservan.": "Rescued. Your discoveries are preserved.",
