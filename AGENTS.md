@@ -31,5 +31,11 @@ use the editor.
 
 ## Application architecture
 - Keep opening menu and configuration in client-side UI modules; never represent unimplemented gameplay or multiplayer as working actions.
-- Store device preferences locally, independently of future Cloud-backed game progress, so configuration does not require an account.
+- Store device preferences locally, independently of Cloud-backed game progress, so configuration does not require an account.
 - Keep scientific reference records separate from UI, with source URLs and explicit simulation distinctions, for reuse by later game systems.
+
+- Mount the full-bleed R3F expedition only on the client-only expedition route; keep domain rules in pure campaign TypeScript for deterministic unit checks.
+- Durable solo saves use owner-scoped game_saves; cooperative membership and revision-checked saves use database RPCs with atomic five-seat admission, so concurrent joins cannot overfill a room.
+- Use one eight-Hz change-only Broadcast/Presence channel per room and durable row-change notifications, with teardown and hidden-tab suppression, so networking stays within the casual co-op message budget.
+- Dev-only window.__game exposes state, action, teleport, sim(seconds), roster, remotes and revision for reproductions; the canvas sets data-scene-ready for the bundled verification harness. Never use these hooks to declare normal UI playthrough fully verified.
+- Store all scene material roles centrally in scene/palette.ts and all DOM styling in global semantic tokens, so scene and UI changes remain coordinated.

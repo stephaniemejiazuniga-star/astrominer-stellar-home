@@ -275,3 +275,4 @@
 .fact-hud {top:230px;}
 .game-top {background:transparent;}
 @media(max-width:700px){.mission-hud{top:63px;max-width:calc(100% - 30px);min-width:240px;}.mission-hud p{max-width:270px;}.minimap{width:90px;height:90px;top:180px;right:12px;}.vitals-hud{top:180px;left:12px;min-width:200px;}.fact-hud{top:290px;right:12px;}.game-toolbar{bottom:20px;}.achievement-toast{top:auto;bottom:290px;}.save-status{top:48px;}}
+@media(max-width:700px){.mission-hud{padding:9px 12px;}.mission-hud p{max-height:38px;overflow:hidden;}.vitals-hud{top:215px;}.minimap{top:215px;}.fact-hud{top:325px;}}
