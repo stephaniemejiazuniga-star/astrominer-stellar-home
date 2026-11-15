@@ -5,8 +5,8 @@ Develop and verify phases in the user's order. Do not substitute planned mechani
 Current request: finish the complete original game before presenting it as ready. Continue through every remaining phase, verifying each before the next. Lovable Cloud is connected for durable progress and real cooperative sessions.
 
 Current completion pass:
-- [ ] Increase asteroid speed and oxygen consumption; verify Q and phone/tablet tank button.
-- [ ] Improve textured terrain and lighting; show growing crops through the base.
+- [x] Increase asteroid speed and oxygen consumption; verify Q and phone/tablet tank button. — RULES.asteroidSpeed 22, oxygenPerSecond normal 0.6; live check pressed Q on Mars: oxygen 91.18 -> 99.88, tanks 10 -> 9; touch tank button present with live count.
+- [x] Improve textured terrain and lighting; show growing crops through the base. — live check: base built, crop planted/watered/grown to ready, screenshot shows six stemmed plants with fruit inside the translucent base.
 - [ ] Run a fresh normal-input campaign from Jugar, with no simulation/teleport/actions injected.
 - [x] Correct astronaut facing so forward movement shows their back, never a backwards walk toward the destination.
 - [x] Implement Earth launchpad, countdown and ascent before spaceflight.
