@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import astronaut from '@/assets/models/astronaut.glb.asset.json';
 import rocket from '@/assets/models/rocket.glb.asset.json';
+import rocketFuel from '@/assets/models/rocket-fuel.glb.asset.json';
 import rocketTop from '@/assets/models/rocket-top.glb.asset.json';
 import habitat from '@/assets/models/habitat.glb.asset.json';
 import gantry from '@/assets/models/launch-tower.glb.asset.json';
@@ -20,7 +21,7 @@ export function Model({url,height=2,avatar,tint,...props}:{url:string;height?:nu
  const {scene}=useGLTF(url); const model=useMemo(()=>{const c=clone(scene);const box=new THREE.Box3().setFromObject(c);const size=box.getSize(new THREE.Vector3());const center=box.getCenter(new THREE.Vector3());const scale=height/(size.y||1);c.scale.setScalar(scale);c.position.set(-center.x*scale,-box.min.y*scale,-center.z*scale);c.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;if(o.name==='gate')o.visible=false;if(avatar||tint){const materials=Array.isArray(o.material)?o.material:[o.material];o.material=materials.map(m=>{const material=m.clone();if(material instanceof THREE.MeshStandardMaterial){if(tint)material.color.set(tint);else if(['metalDark','metalRed'].includes(m.name))material.color.set(avatar==='cyan'?p.glass:avatar==='green'?p.plant:p.accent);material.metalness=.15;material.roughness=.75;}return material;});if(!Array.isArray(o.material)||o.material.length===1)o.material=o.material[0]??o.material;}}});return c;},[scene,height,avatar,tint]);
  return <group {...props}><primitive object={model}/></group>;
 }
-function RocketModel({height=7}:{height?:number}){return <group><Model url={rocket.url} height={height*.8}/><Model url={rocketTop.url} height={height*.24} position={[0,height*.76,0]}/></group>;}
+function RocketModel({height=7}:{height?:number}){return <group><Model url={rocket.url} height={height*.8}/><Model url={rocketFuel.url} height={height*.37} position={[0,height*.42,0]}/><Model url={rocketTop.url} height={height*.24} position={[0,height*.76,0]}/></group>;}
 function groundTexture(){const canvas=document.createElement('canvas');canvas.width=canvas.height=256;const ctx=canvas.getContext('2d');if(ctx){ctx.fillStyle=p.ground;ctx.fillRect(0,0,256,256);let seed=14;for(let i=0;i<18000;i++){seed=(seed*16807)%2147483647;const x=seed%256;seed=(seed*16807)%2147483647;const y=seed%256;ctx.fillStyle=i%3?p.dust:p.stone;ctx.globalAlpha=.1+.15*(i%4);ctx.fillRect(x,y,1+(i%3),1);}}const t=new THREE.CanvasTexture(canvas);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(24,24);t.colorSpace=THREE.SRGBColorSpace;return t;}
 function FrameMetrics({metrics}:{metrics:MutableRefObject<Metrics>}){useFrame(({gl})=>{metrics.current.calls=gl.info.render.calls;metrics.current.triangles=gl.info.render.triangles;gl.info.reset();},-100);return null;}
 function Earth({state,ship}:{state:MutableRefObject<GameState>;ship:MutableRefObject<THREE.Group|null>}){
