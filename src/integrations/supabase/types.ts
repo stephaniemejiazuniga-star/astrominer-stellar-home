@@ -14,13 +14,166 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      expedition_members: {
+        Row: {
+          display_name: string
+          joined_at: string
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          display_name?: string
+          joined_at?: string
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          display_name?: string
+          joined_at?: string
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expedition_members_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expeditions: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          owner_id: string
+          revision: number
+          state: Json
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          id?: string
+          owner_id: string
+          revision?: number
+          state: Json
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          id?: string
+          owner_id?: string
+          revision?: number
+          state?: Json
+        }
+        Relationships: []
+      }
+      game_saves: {
+        Row: {
+          state: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          state: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          state?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar: string | null
+          display_name: string | null
+          enabled: boolean
+          id: string
+        }
+        Insert: {
+          avatar?: string | null
+          display_name?: string | null
+          enabled?: boolean
+          id: string
+        }
+        Update: {
+          avatar?: string | null
+          display_name?: string | null
+          enabled?: boolean
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      close_expedition: { Args: { r: string }; Returns: undefined }
+      create_expedition: {
+        Args: { explorer_name: string; initial_state: Json }
+        Returns: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          owner_id: string
+          revision: number
+          state: Json
+        }
+        SetofOptions: {
+          from: "*"
+          to: "expeditions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      is_expedition_member: { Args: { r: string }; Returns: boolean }
+      join_expedition: {
+        Args: { explorer_name: string; room_code: string }
+        Returns: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          owner_id: string
+          revision: number
+          state: Json
+        }
+        SetofOptions: {
+          from: "*"
+          to: "expeditions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      leave_expedition: { Args: { r: string }; Returns: undefined }
+      save_expedition: {
+        Args: { expected_revision: number; next_state: Json; r: string }
+        Returns: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          owner_id: string
+          revision: number
+          state: Json
+        }
+        SetofOptions: {
+          from: "*"
+          to: "expeditions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never

@@ -1,0 +1,2 @@
+// Scene material roles mirror semantic design tokens; all 3D colors are centralized here.
+export const palette={sky:'#a87868',dust:'#bc886b',ground:'#a7674d',stone:'#a38b7d',iron:'#ac6342',silicon:'#80c9cd',magnesium:'#c7cca2',water:'#73b9d1',suit:'#efe7da',metal:'#d8dce0',glass:'#82cfda',accent:'#ff9154',jupiterSky:'#9d8187',cloud:'#d7b797',platform:'#5f6c76',space:'#121c27',sun:'#ffe6c9',fill:'#adcbd6',plant:'#8daa52',dark:'#233744'};

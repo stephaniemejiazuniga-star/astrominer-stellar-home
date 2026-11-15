@@ -1,0 +1,1 @@
+Kenney Sci-fi Sounds — CC0 1.0 Universal. Mirrored at https://github.com/Boyquotes/kenney-sci-fi-sounds-for-godot . License verified from the repository LICENSE. Engine circular 000 and impact metal 000 are used through the Web Audio mixer; computer noise 000 reserved for research interactions.

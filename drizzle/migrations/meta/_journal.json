@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794763324953,
+      "tag": "0000_astrominer_progress_and_coop",
+      "breakpoints": true
+    }
+  ]
 }
