@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {newGame,applyAction,stepGame,question,marsNodes,cloudNodes,moveVector,launchAltitude,facingYaw,inputVector,deadzone,cropGrowth,asteroidZ,RULES,type GameState} from './campaign';
+import {newGame,applyAction,stepGame,question,marsNodes,cloudNodes,moveVector,launchAltitude,facingYaw,inputVector,deadzone,cropGrowth,asteroidZ,RULES,jupiterSymbols,type GameState} from './campaign';
 function sim(s:GameState,seconds:number,x=s.x,z=s.z){for(let i=0;i<Math.round(seconds*20);i++)stepGame(s,.05,x,z);}
 function prepared(){let s=newGame();for(const item of ['pickaxe','seeds','bag'])s=applyAction(s,{type:'pack',item});return s;}
 function surface(){const s=applyAction(prepared(),{type:'launch'});sim(s,RULES.launchSeconds+35.1);return s;}
@@ -39,4 +39,5 @@ describe('Launch and controls',()=>{
  it('counts down on Earth before ascent and then starts spaceflight',()=>{const s=applyAction(prepared(),{type:'launch'});expect(s.phase).toBe('launch');expect(launchAltitude(3)).toBe(0);expect(launchAltitude(4)).toBeCloseTo(1.8);sim(s,11.9);expect(s.phase).toBe('launch');sim(s,.2);expect(s.phase).toBe('flight');expect(s.flightTime).toBeLessThan(.2);});
  it('points the model native negative Z front in the movement direction',()=>{const m=moveVector(1,0,0),yaw=facingYaw(m.x,m.z);expect(-Math.sin(yaw)).toBeCloseTo(m.x);expect(-Math.cos(yaw)).toBeCloseTo(m.z);});
  it('maps keyboard touch and standard gamepad to identical camera-relative forward',()=>{expect(inputVector(new Set(['KeyW']))).toEqual({forward:1,strafe:0});expect(inputVector(new Set(),0,-1)).toEqual({forward:1,strafe:0});expect(inputVector(new Set(),0,0,0,-1)).toEqual({forward:1,strafe:0});expect(deadzone(.1,.05)).toEqual({x:0,y:0});expect(deadzone(0,-1)).toEqual({x:0,y:-1});});
+ it('completes the campaign after analyzing all 11 Jupiter samples on Mars',()=>{let s=surface();s.built.lab=true;s.jupiterDone=true;for(const j of jupiterSymbols)s.inventory[j]=1;s.inventory['water']=0;for(const j of jupiterSymbols)s=applyAction(s,{type:'scan',symbol:j},12,0);expect(s.analyzed).toContain('O');expect(s.achievements).toContain('Expedición ASTROMINER completada');});
 });
