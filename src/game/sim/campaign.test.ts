@@ -16,7 +16,7 @@ describe('Campaign rules',()=>{
  it('runs the Jupiter vortex for 50 seconds',()=>{const s=surface();s.unlockedJupiter=true;const j=applyAction(s,{type:'travel',planet:'jupiter'},0,15);sim(j,49.9);expect(j.phase).toBe('vortex');sim(j,.2);expect(j.phase).toBe('surface');expect(RULES.vortexSeconds).toBe(50);});
  it('shows a new fact every minute for ten seconds',()=>{const s=surface();s.factTime=0;s.factIndex=-1;sim(s,59.9);expect(s.factIndex).toBe(-1);sim(s,.2);expect(s.factIndex).toBe(0);expect(s.factTime).toBeLessThan(10);sim(s,10);expect(s.factTime).toBeGreaterThan(10);sim(s,50);expect(s.factIndex).toBe(1);expect(RULES.factVisible).toBe(10);});
  it('caps cooperative sessions at five players',()=>{expect(RULES.maxPlayers).toBe(5);});
- it('moves in camera-relative forward, backward and strafe directions',()=>{expect(moveVector(1,0,0)).toEqual({x:0,z:-1});expect(moveVector(-1,0,0)).toEqual({x:0,z:1});expect(moveVector(0,-1,0)).toEqual({x:-1,z:0});expect(moveVector(0,1,0)).toEqual({x:1,z:0});expect(moveVector(1,0,Math.PI/2).x).toBeCloseTo(1);});
+ it('moves in camera-relative forward, backward and strafe directions',()=>{expect(moveVector(1,0,0)).toEqual({x:0,z:-1});expect(moveVector(-1,0,0)).toEqual({x:0,z:1});expect(moveVector(0,-1,0).x).toBe(-1);expect(moveVector(0,-1,0).z).toBeCloseTo(0);expect(moveVector(0,1,0)).toEqual({x:1,z:0});expect(moveVector(1,0,Math.PI/2).x).toBeCloseTo(1);});
  it('connects all seven Mars stages and retains all Jupiter samples on return',()=>{
  let s=surface();s=collect(s,'stone',8);s=collect(s,'iron',7);s=collect(s,'silicon',3);s=collect(s,'magnesium',1);s=collect(s,'water',2);
  expect(s.phase).toBe('surface');s=applyAction(s,{type:'build',building:'base'},0,0);expect(s.stage).toBe(3);
