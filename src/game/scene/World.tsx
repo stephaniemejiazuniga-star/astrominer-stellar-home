@@ -22,6 +22,7 @@ export function Model({url,height=2,avatar,tint,...props}:{url:string;height?:nu
 }
 function RocketModel({height=7}:{height?:number}){return <group><Model url={rocket.url} height={height*.8}/><Model url={rocketTop.url} height={height*.24} position={[0,height*.76,0]}/></group>;}
 function groundTexture(){const canvas=document.createElement('canvas');canvas.width=canvas.height=256;const ctx=canvas.getContext('2d');if(ctx){ctx.fillStyle=p.ground;ctx.fillRect(0,0,256,256);let seed=14;for(let i=0;i<18000;i++){seed=(seed*16807)%2147483647;const x=seed%256;seed=(seed*16807)%2147483647;const y=seed%256;ctx.fillStyle=i%3?p.dust:p.stone;ctx.globalAlpha=.1+.15*(i%4);ctx.fillRect(x,y,1+(i%3),1);}}const t=new THREE.CanvasTexture(canvas);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(24,24);t.colorSpace=THREE.SRGBColorSpace;return t;}
+function FrameMetrics({metrics}:{metrics:MutableRefObject<Metrics>}){useFrame(({gl})=>{metrics.current.calls=gl.info.render.calls;metrics.current.triangles=gl.info.render.triangles;gl.info.reset();},-100);return null;}
 function Earth({state,ship}:{state:MutableRefObject<GameState>;ship:MutableRefObject<THREE.Group|null>}){
  const texture=useMemo(()=>{const t=groundTexture();return t;},[]);useEffect(()=>()=>texture.dispose(),[texture]);
  return <><mesh rotation={[-Math.PI/2,0,0]} receiveShadow><planeGeometry args={[300,300]}/><meshStandardMaterial map={texture} color={p.earthGround}/></mesh><mesh position={[-12,.1,0]} receiveShadow><boxGeometry args={[18,.3,18]}/><meshStandardMaterial color={p.concrete} roughness={.9}/></mesh><mesh position={[-12,.28,0]} rotation={[-Math.PI/2,0,0]}><ringGeometry args={[4,4.3,32]}/><meshBasicMaterial color={p.suit}/></mesh><Suspense fallback={null}><Model url={gantry.url} height={14} tint={p.gantry} position={[-18,.25,-3]}/><Model url={habitat.url} height={4} position={[-28,0,-18]}/></Suspense><group ref={ship} position={[-12,.3,0]}><Suspense fallback={null}><RocketModel height={10}/></Suspense>{state.current.phase==='launch'&&state.current.launchTime>RULES.countdownSeconds&&<mesh position={[0,-2,0]} rotation={[0,0,Math.PI]}><coneGeometry args={[1.1,4,8]}/><meshBasicMaterial color={p.flame}/></mesh>}</group></>;
@@ -71,7 +72,7 @@ function Simulation({state,controls,settings,onTick,remote,avatar,metrics,onImpa
   camera.position.lerp(target,1-Math.exp(-5*dt));camera.lookAt(earth?new THREE.Vector3(-12,5+altitude,0):s.phase==='flight'?new THREE.Vector3(s.x,y.current,-4):new THREE.Vector3(group.position.x,group.position.y+1.2,group.position.z));
   const fog=scene.fog;if(fog instanceof THREE.Fog){fog.near=s.storm>0?3:35;fog.far=s.storm>0?15:130;fog.color.set(earth?p.earthSky:s.planet==='jupiter'?p.jupiterSky:p.sky);}
   for(const [id,data]of remote.current){const g=remotes.current.get(id);if(g){g.position.lerp(new THREE.Vector3(data.x,data.y,data.z),1-Math.exp(-12*dt));g.rotation.y=data.yaw;}}
-  metrics.current={calls:gl.info.render.calls,triangles:gl.info.render.triangles,frameMs:raw*1000,workMs:performance.now()-started,phase:s.phase,heading:yaw.current,y:y.current};
+  metrics.current={calls:metrics.current.calls,triangles:metrics.current.triangles,frameMs:raw*1000,workMs:performance.now()-started,phase:s.phase,heading:yaw.current,y:y.current};
   report.current+=raw;if(report.current>.2){report.current=0;onTick();}
  });
  const s=state.current;const space=s.phase==='flight';const earth=s.phase==='packing'||s.phase==='launch';const jupiter=s.planet==='jupiter';
@@ -82,4 +83,4 @@ function Simulation({state,controls,settings,onTick,remote,avatar,metrics,onImpa
  {[...remote.current.keys()].map(id=><group key={id} ref={g=>{if(g)remotes.current.set(id,g);else remotes.current.delete(id);}}><Suspense fallback={null}><Model url={astronaut.url} height={1.8} avatar={remote.current.get(id)?.avatar??'orange'}/></Suspense></group>)}
  </>;
 }
-export function World(props:Parameters<typeof Simulation>[0]){return <Canvas shadows={props.settings.graphics==='high'} dpr={props.settings.graphics==='high'?[1,1.5]:1} camera={{position:[0,5,18],fov:55}} gl={{antialias:props.settings.graphics==='high'}}><Simulation {...props}/></Canvas>;}
+export function World(props:Parameters<typeof Simulation>[0]){return <Canvas shadows={props.settings.graphics==='high'} dpr={props.settings.graphics==='high'?[1,1.5]:1} camera={{position:[0,5,18],fov:55}} gl={{antialias:props.settings.graphics==='high'}} onCreated={({gl})=>{gl.info.autoReset=false;}}><FrameMetrics metrics={props.metrics}/><Simulation {...props}/></Canvas>;}
