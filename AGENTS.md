@@ -39,6 +39,7 @@ use the editor.
 - Use one eight-Hz change-only Broadcast/Presence channel per room and durable row-change notifications, with teardown and hidden-tab suppression, so networking stays within the casual co-op message budget.
 - Dev-only window.__game exposes state, action, teleport, sim(seconds), roster, remotes and revision for reproductions; the canvas sets data-scene-ready for the bundled verification harness. Never use these hooks to declare normal UI playthrough fully verified.
 - Store all scene material roles centrally in scene/palette.ts and all DOM styling in global semantic tokens, so scene and UI changes remain coordinated.
+- Instance repeated Mars rocks, minerals and crop foliage; crop growth reads campaign state and the base shell is translucent so cultivation stays visible without adding per-plant draw calls.
 
 - Earth launch is a deterministic campaign phase before flight; legacy version-one saves merge launch defaults for compatibility.
 - All input sources share pure input/facing helpers; the astronaut GLB faces negative Z, so heading includes the model-axis correction.
