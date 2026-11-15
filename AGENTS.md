@@ -44,3 +44,4 @@ use the editor.
 - All input sources share pure input/facing helpers; the astronaut GLB faces negative Z, so heading includes the model-axis correction.
 - Clone suit materials per astronaut and broadcast optional profile appearance, so shared model caches never leak another player's colors.
 - One gesture-unlocked GameAudio mixer owns recorded sounds and exposes numeric meters; dev __game.performance reports render budgets, not real-device FPS certification.
+- English presentation uses stable Spanish domain identifiers and a language context; never translate action types, table keys, site keys or quiz answers before submitting them.
